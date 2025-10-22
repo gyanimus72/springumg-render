@@ -1,5 +1,3 @@
-cd ~/springumg-actions
-cat <<'PY' > check_and_notify.py
 import os, json, html, requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
