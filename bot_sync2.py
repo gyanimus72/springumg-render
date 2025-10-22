@@ -20,13 +20,15 @@ def fetch_notices():
         r = requests.get(URL, timeout=10)
         soup = BeautifulSoup(r.text, "html.parser")
         items = []
-        for li in soup.select(".avviso-item, li"):
-            title = li.get_text(strip=True)
-            link = li.find("a")["href"] if li.find("a") else URL
-            date = li.find("time").get_text(strip=True) if li.find("time") else ""
+        # Cerca solo i blocchi di avviso reali
+        for div in soup.select(".avviso-item"):
+            title_tag = div.find("a")
+            title = title_tag.get_text(strip=True) if title_tag else None
+            link = title_tag["href"] if title_tag and title_tag.has_attr("href") else URL
+            date = div.find("time").get_text(strip=True) if div.find("time") else ""
             if title:
                 items.append({"title": title, "link": link, "date": date})
-        return items[:10]
+        return items
     except Exception as e:
         print("Errore fetch_notices:", e)
         return []
