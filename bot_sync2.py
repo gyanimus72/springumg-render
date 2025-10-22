@@ -97,7 +97,13 @@ def start(m):
         users.append(m.from_user.id)
         save_users(users)
         bot.send_message(CHAT_ID, f"📩 Nuovo utente registrato: @{m.from_user.username} ({m.from_user.id})")
-    bot.reply_to(m, f"🎓 Bot avviato con successo.\n✅ Nessun nuovo avviso al momento.\n🔎 <a href=\"{URL}\">Controlla manualmente la pagina</a>", parse_mode="HTML")
+    bot.reply_to(
+        m,
+        f"🎓 Bot avviato con successo.\n"
+        f"✅ Nessun nuovo avviso al momento.\n"
+        f"🔎 <a href=\"{URL}\">Controlla manualmente la pagina</a>",
+        parse_mode="HTML"
+    )
 
 @bot.message_handler(commands=["refresh"])
 def refresh(m):
@@ -116,4 +122,12 @@ threading.Thread(target=schedule_loop, daemon=True).start()
 
 # === AVVIO ===
 
-bot.send_message(CHAT_ID, "🤖 Bot avviato correttamente
+bot.send_message(CHAT_ID, "🤖 Bot avviato correttamente.\nControllo in corso...", parse_mode="HTML")
+check_new(startup=True)
+print("✅ Bot in esecuzione su Render...")
+
+bot.infinity_polling(timeout=60, long_polling_timeout=60)
+
+# Mantiene il processo attivo su Render
+while True:
+    time.sleep(3600)
